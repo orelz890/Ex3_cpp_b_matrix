@@ -7,7 +7,7 @@ namespace zich{
             throw std::runtime_error("Both matrixs should be the same size");
         }        
         std::vector<double> new_data;
-        new_data.resize(mat.mat_size);
+        new_data.resize((unsigned long)mat.mat_size);
         for (int i = 0; i < this->matrix.size(); i++){
             new_data[(unsigned long)i] = (this->matrix[(unsigned long)i] + mat.matrix[(unsigned long)i]);
         }
@@ -38,7 +38,7 @@ namespace zich{
             throw std::runtime_error("Both matrixs should be the same size");
         }
         std::vector<double> new_data;
-        new_data.resize(mat.mat_size);
+        new_data.resize((unsigned long)mat.mat_size);
         for (int i = 0; i < this->mat_size; i++){
             new_data[(unsigned long)i] = (this->get_val_at(i) - mat.get_val_at(i));
         }
@@ -55,7 +55,7 @@ namespace zich{
             throw std::runtime_error("Both matrixs should be the same size");
         }
         std::vector<double> new_data;
-        new_data.resize(mat.mat_size);
+        new_data.resize((unsigned long)mat.mat_size);
         for (int i = 0; i < this->mat_size; i++){
             new_data[(unsigned long)i] = (this->get_val_at(i) * mat.get_val_at(i));
         }
@@ -64,7 +64,7 @@ namespace zich{
 
     Matrix Matrix:: operator*(const double scalar) const{
         std::vector<double> new_data;
-        new_data.resize(this->mat_size);
+        new_data.resize((unsigned long)this->mat_size);
         for (int i = 0; i < this->mat_size; i++){
             new_data[(unsigned long)i] = (this->matrix[(unsigned long)i] * scalar);
         }
@@ -187,26 +187,61 @@ namespace zich{
 
         for (int i = 0; i < mat.mat_size; i++){
             if (i % mat.columns == 0){
-                os << '[' << mat.matrix.at((unsigned long)i) << ' ';
+                os << '[' << mat.get_val_at(i) << ' ';
             }
             else if((i+1) % mat.columns == 0){
-                os << mat.matrix.at((unsigned long)i) << ']' << '\n';
+                os << mat.get_val_at(i) << ']' << '\n';
             }
             else{
-                os << mat.matrix.at((unsigned long)i) << ' ';
+                os << mat.get_val_at(i) << ' ';
             }
         }
         return os;
     }
-
+// First part taken from:
+// https://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring
     std::istream& operator>> (std::istream &is, Matrix& mat){
-        int size = mat.rows * mat.columns;
-        for (int i = 0; i <= size; i++){
-            double temp;
-            is >> temp;
-            mat.matrix[(unsigned long)i] = temp;
+
+        std::vector<double> new_data;
+        new_data.resize((unsigned long)mat.mat_size);
+
+        std::string data;
+        // remember where we are    
+        std::streampos p = is.tellg();
+        // go to the end
+        is.seekg(0, std::ios_base::end);
+        // work out the size
+        std::streamoff str_size = (long)(is.tellg() - p);
+        // restore the position
+        is.seekg(p);
+        data.resize((unsigned long)str_size);
+        // and finally, read in the data
+        is.read(&data[0], str_size); 
+
+        // Converting the string to vector<double>
+        int pos = 0;
+        std::string curr_val_str;
+        for (int i = 0; i < str_size; i++){
+            char curr_data = data.at((unsigned long)i);
+            if (curr_data != ' ' && curr_data != '[' && curr_data != ']' && curr_data != ','){
+                curr_val_str += curr_data;
+            }
+            else if(curr_val_str.size() > 0){
+                // Checking that the size match the input
+                if(pos >= mat.mat_size){
+                    throw std::runtime_error("Size doesn't match row & col input!");
+                }
+                double curr_val = std::stod(curr_val_str);
+                new_data[(unsigned long)pos] = curr_val;
+                pos++;
+                curr_val_str = "";
+            }
         }
-        is >> mat.rows >> mat.columns;
+
+        for (int i = 0; i < mat.mat_size; i++){
+            mat.matrix[(unsigned long)i] = new_data.at((unsigned long)i);
+        }
+
         return is;
     }
 
