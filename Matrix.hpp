@@ -51,6 +51,7 @@ namespace zich{
         // Value changing operators:
         Matrix operator+(const Matrix &mat) const;
         Matrix operator-(const Matrix &mat) const;
+        Matrix operator+() const;
         Matrix operator-() const;
 
         Matrix operator*(const Matrix &mat) const;

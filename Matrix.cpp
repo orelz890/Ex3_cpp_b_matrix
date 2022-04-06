@@ -50,6 +50,11 @@ namespace zich{
         return  a*(-1);
     }
 
+    Matrix Matrix::operator+() const{
+        Matrix a{this->matrix, this->rows, this->columns};
+        return a;
+    }
+
     Matrix Matrix:: operator*(const Matrix &mat) const{
         if (mat_size != mat.mat_size){
             throw std::runtime_error("Both matrixs should be the same size");
