@@ -107,5 +107,25 @@
 //         cin >> act;
 //         zich::action(act,a ,b);
 //     }
+
+
+//     vector<double> identity_3 = {1,0,0,0,1,0,0,0,1};//3x3
+//     zich::Matrix mat_identity_3(identity_3,3,3);
+//     vector<double> vec1 = {1,1,1,1,1,1,1,1,1};//3x3
+//     vector<double> arr = {2,1,1,1,2,1,1,1,2};//3x3   arr = identity_3 + vec1
+//     vector<double> vec2 = {1,0,0,0,0,1,0,0,0,0,1,0};//3x4
+//     vector<double> identity_4 = {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};//4x4
+//     vector<double> _vec_ = {1,1,1,1,1,1,1,1,1,1,1,1};//4x3
+//     zich::Matrix _mat_(_vec_, 4, 3);
+//     zich::Matrix mat1(vec1, 3,3);
+//     zich::Matrix mat_arr(arr,3,3);
+//     zich::Matrix mat2(vec2,3,4);
+//     zich::Matrix mat_identity_4(identity_4,4,4);
+
+//     cout << mat1*mat_identity_3;
+//     cout << mat_identity_3*mat1;
+
+//     cout<< mat2*_mat_;
+
 //     return 0;
 // }

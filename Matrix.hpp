@@ -22,10 +22,15 @@ namespace zich{
         int get_cols() const{
             return columns;
         }
+        double get_val_at(int row, int col) const{
+            return matrix.at((unsigned long)(row*columns + col));
+        }
         double get_val_at(int i) const{
             return matrix.at((unsigned long)i);
         }
-
+        void set_val_at(int row, int col, double val){
+            matrix[(unsigned long)(row*columns + col)] = val;
+        }
         // Deffult constructor
         Matrix(const int row, const int col){
             if (row <= 0 || col <= 0){
@@ -75,7 +80,7 @@ namespace zich{
         bool operator==(const Matrix &mat) const;
         bool operator!=(const Matrix &mat) const;
 
-        // // Input/output
+        // Input/output
         friend std::ostream& operator<<(std::ostream& os , const Matrix& mat);
         friend std::istream& operator>> (std::istream &is, Matrix& mat );
         friend Matrix operator*(const double scalar, const Matrix &mat);
