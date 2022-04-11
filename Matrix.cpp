@@ -216,9 +216,6 @@ namespace zich{
 // https://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring
     std::istream& operator>> (std::istream &is, Matrix& mat){
 
-        std::vector<double> new_data;
-        new_data.resize((unsigned long)mat.mat_size);
-
         // Extracting the data to a string
         std::string data;
         // remember where we are    
@@ -233,31 +230,69 @@ namespace zich{
         // and finally, read in the data
         is.read(&data[0], str_size);
 
+        // Find the size of the new matrix
+        int row = 0 , col = 1, curr_row_col = 1;
+        bool first_row = true, begin = false;
+        for (int i = 0; i < str_size; i++){
+            
+            char curr_data = data.at((unsigned long)i);
+            bool is_num = (curr_data - '0') >= 0 && (curr_data - '0') <= 9;
+            bool is_legal = is_num || curr_data == ',' || curr_data == '[' || curr_data == ']' || curr_data == ' ' || curr_data == '\n'; 
+            
+            printf("%d ", i);
+            fflush(stdout);
+            if (!is_legal || i == 0 && curr_data != '[' 
+                || i < str_size -1 && ( curr_data == ',' && data.at((unsigned long)(i+1)) != ' ' )
+                || i < str_size -2 && curr_data == ']' && data.at((unsigned long)(i+1)) != ',' 
+                || i < str_size -2 && curr_data == ' ' && ( data.at((unsigned long)(i+1)) != '[' 
+                && (data.at((unsigned long)(i+1)) - '0' > 9 || data.at((unsigned long)(i+1)) - '0' < 0))
+                || i == str_size -2 && (data.at((unsigned long)i) != ']' || data.at((unsigned long)(i+1)) != '\n'))
+            {
+                throw std::runtime_error("Wrong input values!");
+            }
+            
+            if (curr_data == '['){
+                row++;
+                curr_row_col = 1;
+                begin = true;
+            }
+            if (curr_data == ']'){
+                first_row = false;
+                begin = false;
+                if (col != curr_row_col){
+                    throw std::runtime_error("Wrong input values!");
+                }    
+            }
+            if(begin && curr_data == ' '){
+                curr_row_col++;
+                if (first_row){
+                    col = curr_row_col;
+                }     
+            }
+        }
+        mat.matrix.resize((unsigned long)row*col);
+        mat.mat_size = row*col;
+        mat.columns = col;
+        mat.rows = row;
+
         // Converting the string to vector<double>
         int pos = 0;
         std::string curr_val_str;
         for (int i = 0; i < str_size; i++){
-            char curr_data = data.at((unsigned long)i);
 
-            if ((curr_data - '0') >= 0 && (curr_data - '0') <= 9){
+            char curr_data = data.at((unsigned long)i);
+            bool is_num = (curr_data - '0') >= 0 && (curr_data - '0') <= 9;
+
+            if (is_num){
                 curr_val_str += curr_data;
             }
             else if(curr_val_str.size() > 0){
-                // Checking that the size match the input
-                if(pos >= mat.mat_size){
-                    throw std::runtime_error("Size doesn't match row & col input!");
-                }
+
                 double curr_val = std::stod(curr_val_str);
-                new_data[(unsigned long)pos] = curr_val;
-                pos++;
+                mat.matrix[(unsigned long)pos++] = curr_val;
                 curr_val_str = "";
-            }
+            } 
         }
-
-        for (int i = 0; i < mat.mat_size; i++){
-            mat.matrix[(unsigned long)i] = new_data.at((unsigned long)i);
-        }
-
         return is;
     }
 

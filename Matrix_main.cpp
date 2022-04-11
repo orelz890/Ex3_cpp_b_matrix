@@ -135,11 +135,18 @@ int main(){
 
     // cout <<_mat_;
     // std::vector<double> identity = {1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    zich::Matrix mat20{3,4};
+    // zich::Matrix mat20{3,4};
 
-    istringstream is{"[1 1 1 1], [1 1 1 1], [1 1 1 1]\n"};
-    is >> mat20;
-    // mat1==mat_cin;
-    cout << mat20;
+    // istringstream is{"[1 1 1 1], [1 1 1 1], [1 1 1 1]\n"};
+    // is >> mat20;
+    // // mat1==mat_cin;
+    // cout << mat20;
+    std::vector<double> twoX2 = {3, 3, 2, 2};
+
+    zich::Matrix m9{twoX2 , 2, 2};
+    std::stringstream os;
+    os << m9 << endl;
+    cout << os.str();
+
     return 0;
 }
