@@ -56,20 +56,22 @@ namespace zich{
     }
 
     Matrix Matrix:: operator*(const Matrix &mat) const{
-        if (this->mat_size != mat.mat_size || this->columns != mat.columns || this->rows != mat.rows){
+        if (this->columns != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
         }
         std::vector<double> new_data;
-        new_data.resize((unsigned long)mat.mat_size);
-        Matrix ans(new_data, this->rows, this->columns);
+        new_data.resize((unsigned long)(this->rows*mat.columns));
+        Matrix ans(new_data, this->rows, mat.columns);
 
-        for (int i = 0; i < get_rows(); i++){
-            for (int col = 0; col < this->get_cols(); col++){
+        int ans_col = 0;
+        int col, mat_col = 0;
+        for (int i = 0; i < this->rows; i++){
+            for (int row = 0; row < this->rows; row++){
                 double sum_val = 0;
-                for (int row = 0; row < this->get_rows(); row++){
-                    sum_val += this->get_val_at(i, col)*mat.get_val_at(row, col);
+                for (col = 0; col < this->columns; col++){
+                    sum_val += this->get_val_at(i, col)*mat.get_val_at(col,mat_col%(mat.columns));
                 }
-                ans.set_val_at(i, col, sum_val);
+                ans.set_val_at(i,mat_col++%(mat.columns), sum_val);
             }
         }
         return ans;
@@ -111,7 +113,7 @@ namespace zich{
     }
 
     Matrix& Matrix:: operator+=(const Matrix &mat){
-        if (mat_size != mat.mat_size){
+        if (this->mat_size != mat.mat_size || this->columns != mat.columns || this->rows != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
         }
         for (int i = 0; i < this->mat_size; i++){
@@ -121,7 +123,7 @@ namespace zich{
     }
 
     Matrix& Matrix:: operator-=(const Matrix &mat){
-        if (mat_size != mat.mat_size){
+        if (this->mat_size != mat.mat_size || this->columns != mat.columns || this->rows != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
         }
         for (int i = 0; i < this->matrix.size(); i++){
@@ -131,19 +133,10 @@ namespace zich{
     }
 
     Matrix& Matrix:: operator*=(const Matrix &mat){
-        if (this->mat_size != mat.mat_size || this->columns != mat.columns || this->rows != mat.rows){
+        if (this->columns != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
         }
-
-        for (int i = 0; i < this->get_rows(); i++){
-            for (int col = 0; col < this->get_cols(); col++){
-                double sum_val = 0;
-                for (int row = 0; row < this->get_rows(); row++){
-                    sum_val += this->get_val_at(i, col)*mat.get_val_at(row, col);
-                }
-                this->set_val_at(i, col, sum_val);
-            }
-        }
+        *this = (*this)*mat;
         return *this;
     }
 
@@ -203,13 +196,15 @@ namespace zich{
     }
 
     std::ostream& operator<<(std::ostream& os , const Matrix& mat){
-
         for (int i = 0; i < mat.mat_size; i++){
             if (i % mat.columns == 0){
                 os << '[' << mat.get_val_at(i) << ' ';
             }
             else if((i+1) % mat.columns == 0){
-                os << mat.get_val_at(i) << ']' << '\n';
+                os << mat.get_val_at(i) << ']';
+                if ((i+1) != mat.mat_size){
+                    os << '\n';
+                }
             }
             else{
                 os << mat.get_val_at(i) << ' ';

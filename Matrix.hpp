@@ -43,7 +43,7 @@ namespace zich{
         }
         // Constroctor - init matrix
         Matrix(std::vector<double> mat_vector, const int row, const int col){
-            if (mat_vector.size() != (row*col) || row <= 0 || col <= 0){
+            if (row <= 0 || col <= 0){
                 throw std::runtime_error("Size don't match rows & cols input!");
             }
             rows = row;
