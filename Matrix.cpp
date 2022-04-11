@@ -219,6 +219,7 @@ namespace zich{
         std::vector<double> new_data;
         new_data.resize((unsigned long)mat.mat_size);
 
+        // Extracting the data to a string
         std::string data;
         // remember where we are    
         std::streampos p = is.tellg();
@@ -230,14 +231,15 @@ namespace zich{
         is.seekg(p);
         data.resize((unsigned long)str_size);
         // and finally, read in the data
-        is.read(&data[0], str_size); 
+        is.read(&data[0], str_size);
 
         // Converting the string to vector<double>
         int pos = 0;
         std::string curr_val_str;
         for (int i = 0; i < str_size; i++){
             char curr_data = data.at((unsigned long)i);
-            if (curr_data != ' ' && curr_data != '[' && curr_data != ']' && curr_data != ','){
+
+            if ((curr_data - '0') >= 0 && (curr_data - '0') <= 9){
                 curr_val_str += curr_data;
             }
             else if(curr_val_str.size() > 0){
