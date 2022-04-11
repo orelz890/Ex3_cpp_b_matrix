@@ -1,7 +1,7 @@
-// ========================
-// my test
-// =======================
-
+/* ============
+   MY TEST
+   ============
+*/
 #include "doctest.h"
 #include "Matrix.hpp"
 #include <string>
@@ -358,7 +358,7 @@ TEST_CASE("Illigal operations"){
 //     CHECK_THROWS((mat2*mat1));
 //     CHECK_THROWS(mat3*mat2);
 
-//     CHECK_THROWS(mat2*mat2);                                       /////////////////////////////////////////
+//     CHECK_THROWS(mat2*mat2);
 
 //     CHECK_THROWS(mat4_arr*mat3);
 //     CHECK_THROWS(mat2*mat4_arr);
@@ -419,11 +419,11 @@ TEST_CASE("Illigal operations"){
 
 //     CHECK(((mat1*mat_identity_3) == mat1));
 
-//     CHECK(((mat_identity_3*mat1) == mat1));               ////////////////////////////////
+//     CHECK(((mat_identity_3*mat1) == mat1));
     
-//     CHECK(((mat2*mat_identity_4) == mat2));              /////////////////////////////////
+//     CHECK(((mat2*mat_identity_4) == mat2));
 //     CHECK(((mat1+mat_identity_3) == mat_arr));
-//     CHECK(((mat2*_mat_) == mat1));                       ///////////////////////
+//     CHECK(((mat2*_mat_) == mat1));
 
 //     for (double i = 1; i < 500; i++)
 //     {

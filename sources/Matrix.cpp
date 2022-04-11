@@ -1,5 +1,9 @@
 #include "Matrix.hpp"
 
+const int MIN_NUM_CHAR = 0;
+const int MAX_NUM_CHAR = 9;
+
+
 namespace zich{
 
     Matrix Matrix:: operator+(const Matrix &mat) const{
@@ -59,12 +63,15 @@ namespace zich{
         if (this->columns != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
         }
+        // Create new matrix
         std::vector<double> new_data;
-        new_data.resize((unsigned long)(this->rows*mat.columns));
+        new_data.resize((unsigned long)this->rows*mat.columns);
         Matrix ans(new_data, this->rows, mat.columns);
 
+        // Multiplication calculation
         int ans_col = 0;
-        int col, mat_col = 0;
+        int col = 0;
+        int mat_col = 0;
         for (int i = 0; i < this->rows; i++){
             for (int row = 0; row < this->rows; row++){
                 double sum_val = 0;
@@ -212,6 +219,8 @@ namespace zich{
         }
         return os;
     }
+
+
 // First part taken from:
 // https://stackoverflow.com/questions/3203452/how-to-read-entire-stream-into-a-stdstring
     std::istream& operator>> (std::istream &is, Matrix& mat){
@@ -231,22 +240,23 @@ namespace zich{
         is.read(&data[0], str_size);
 
         // Find the size of the new matrix
-        int row = 0 , col = 1, curr_row_col = 1;
-        bool first_row = true, begin = false;
+        unsigned long row = 0;
+        unsigned long col = 1;
+        int curr_row_col = 1;
+        bool first_row = true;
+        bool begin = false;
         for (int i = 0; i < str_size; i++){
             
             char curr_data = data.at((unsigned long)i);
-            bool is_num = (curr_data - '0') >= 0 && (curr_data - '0') <= 9;
+            bool is_num = (curr_data - '0') >= MIN_NUM_CHAR && (curr_data - '0') <= MAX_NUM_CHAR;
             bool is_legal = is_num || curr_data == ',' || curr_data == '[' || curr_data == ']' || curr_data == ' ' || curr_data == '\n'; 
             
-            printf("%d ", i);
-            fflush(stdout);
-            if (!is_legal || i == 0 && curr_data != '[' 
-                || i < str_size -1 && ( curr_data == ',' && data.at((unsigned long)(i+1)) != ' ' )
-                || i < str_size -2 && curr_data == ']' && data.at((unsigned long)(i+1)) != ',' 
-                || i < str_size -2 && curr_data == ' ' && ( data.at((unsigned long)(i+1)) != '[' 
-                && (data.at((unsigned long)(i+1)) - '0' > 9 || data.at((unsigned long)(i+1)) - '0' < 0))
-                || i == str_size -2 && (data.at((unsigned long)i) != ']' || data.at((unsigned long)(i+1)) != '\n'))
+            if (!is_legal || (i == 0 && curr_data != '[') 
+                || ((i < str_size -1) && ( curr_data == ',' && data.at((unsigned long)i+1) != ' ') )
+                || ((i < str_size -2) && ((curr_data == ']') && (data.at((unsigned long)i+1) != ','))) 
+                || ((i < str_size -2) && ((curr_data == ' ') && ( (data.at((unsigned long)i+1) != '[') 
+                && ((data.at((unsigned long)i+1) - '0' > MAX_NUM_CHAR) || (data.at((unsigned long)i+1) - '0' < MIN_NUM_CHAR)))))
+                || ((i == str_size -2) && ((data.at((unsigned long)i) != ']') || (data.at((unsigned long)i+1) != '\n'))))
             {
                 throw std::runtime_error("Wrong input values!");
             }
@@ -270,7 +280,7 @@ namespace zich{
                 }     
             }
         }
-        mat.matrix.resize((unsigned long)row*col);
+        mat.matrix.resize(row*col);
         mat.mat_size = row*col;
         mat.columns = col;
         mat.rows = row;
@@ -281,12 +291,12 @@ namespace zich{
         for (int i = 0; i < str_size; i++){
 
             char curr_data = data.at((unsigned long)i);
-            bool is_num = (curr_data - '0') >= 0 && (curr_data - '0') <= 9;
+            bool is_num = (curr_data - '0') >= MIN_NUM_CHAR && (curr_data - '0') <= MAX_NUM_CHAR;
 
             if (is_num){
                 curr_val_str += curr_data;
             }
-            else if(curr_val_str.size() > 0){
+            else if(!(curr_val_str.empty())){
 
                 double curr_val = std::stod(curr_val_str);
                 mat.matrix[(unsigned long)pos++] = curr_val;
