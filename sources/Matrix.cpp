@@ -65,7 +65,7 @@ namespace zich{
         }
         // Create new matrix
         std::vector<double> new_data;
-        new_data.resize((unsigned long)this->rows*mat.columns);
+        new_data.resize((unsigned long)this->rows*(unsigned long)mat.columns);
         Matrix ans(new_data, this->rows, mat.columns);
 
         // Multiplication calculation
@@ -240,8 +240,8 @@ namespace zich{
         is.read(&data[0], str_size);
 
         // Find the size of the new matrix
-        unsigned long row = 0;
-        unsigned long col = 1;
+        int row = 0;
+        int col = 1;
         int curr_row_col = 1;
         bool first_row = true;
         bool begin = false;
@@ -280,7 +280,8 @@ namespace zich{
                 }     
             }
         }
-        mat.matrix.resize(row*col);
+
+        mat.matrix.resize((unsigned long)(row)*(unsigned long)col);
         mat.mat_size = row*col;
         mat.columns = col;
         mat.rows = row;
