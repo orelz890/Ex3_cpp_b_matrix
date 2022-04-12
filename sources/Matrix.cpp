@@ -15,7 +15,7 @@ namespace zich{
         for (int i = 0; i < this->matrix.size(); i++){
             new_data[(unsigned long)i] = (this->matrix[(unsigned long)i] + mat.matrix[(unsigned long)i]);
         }
-        Matrix ans{new_data, this->rows, mat.get_cols()};
+        Matrix ans{new_data, this->rows, mat.columns};
         return ans;
     }
 
