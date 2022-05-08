@@ -12,6 +12,7 @@ namespace zich{
         }        
         std::vector<double> new_data;
         new_data.resize((unsigned long)mat.mat_size);
+        // Fill the new vector with the calculation results
         for (int i = 0; i < this->matrix.size(); i++){
             new_data[(unsigned long)i] = (this->matrix[(unsigned long)i] + mat.matrix[(unsigned long)i]);
         }
@@ -43,6 +44,7 @@ namespace zich{
         }
         std::vector<double> new_data;
         new_data.resize((unsigned long)mat.mat_size);
+        // Fill the new vector with the calculation results
         for (int i = 0; i < this->mat_size; i++){
             new_data[(unsigned long)i] = (this->get_val_at(i) - mat.get_val_at(i));
         }
@@ -72,7 +74,9 @@ namespace zich{
         int ans_col = 0;
         int col = 0;
         int mat_col = 0;
+        // The output matrix has as many rows as the laft side matrix
         for (int i = 0; i < this->rows; i++){
+            // Do the actual calculation
             for (int row = 0; row < this->rows; row++){
                 double sum_val = 0;
                 for (col = 0; col < this->columns; col++){
@@ -87,6 +91,7 @@ namespace zich{
     Matrix Matrix:: operator*(const double scalar) const{
         std::vector<double> new_data;
         new_data.resize((unsigned long)this->mat_size);
+        // Fill the new vector with the calculation results
         for (int i = 0; i < this->mat_size; i++){
             new_data[(unsigned long)i] = (this->matrix[(unsigned long)i] * scalar);
         }
@@ -186,6 +191,7 @@ namespace zich{
         if (this->mat_size != mat.mat_size || this->columns != mat.columns || this->rows != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
         }
+        // Check if every mirror cels are equal
         for (int i = 0; i < this->mat_size; i++){
             if(this->get_val_at(i) != mat.get_val_at(i)){
                 return false;
@@ -204,15 +210,18 @@ namespace zich{
 
     std::ostream& operator<<(std::ostream& os , const Matrix& mat){
         for (int i = 0; i < mat.mat_size; i++){
+            // Fill the start of any row
             if (i % mat.columns == 0){
                 os << '[' << mat.get_val_at(i) << ' ';
             }
+            // Fill the end of any row
             else if((i+1) % mat.columns == 0){
                 os << mat.get_val_at(i) << ']';
                 if ((i+1) != mat.mat_size){
                     os << '\n';
                 }
             }
+            // Fill the middle
             else{
                 os << mat.get_val_at(i) << ' ';
             }
@@ -251,6 +260,7 @@ namespace zich{
             bool is_num = (curr_data - '0') >= MIN_NUM_CHAR && (curr_data - '0') <= MAX_NUM_CHAR;
             bool is_legal = is_num || curr_data == ',' || curr_data == '[' || curr_data == ']' || curr_data == ' ' || curr_data == '\n'; 
             
+            // Check if we got illigal input
             if (!is_legal || (i == 0 && curr_data != '[') 
                 || ((i < str_size -1) && ( curr_data == ',' && data.at((unsigned long)i+1) != ' ') )
                 || ((i < str_size -2) && ((curr_data == ']') && (data.at((unsigned long)i+1) != ','))) 
@@ -261,6 +271,7 @@ namespace zich{
                 throw std::runtime_error("Wrong input values!");
             }
             
+            // Check how many rows we have by loop
             if (curr_data == '['){
                 row++;
                 curr_row_col = 1;
@@ -273,6 +284,7 @@ namespace zich{
                     throw std::runtime_error("Wrong input values!");
                 }    
             }
+            // Check how many cols we have by loop
             if(begin && curr_data == ' '){
                 curr_row_col++;
                 if (first_row){
