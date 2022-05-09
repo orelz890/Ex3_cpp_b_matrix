@@ -151,7 +151,7 @@
 
 //         // If needed a second matrix get it too
 //         try{
-//             if (act < 9 ){
+//             if (act <= 9 ){
 //                 cout << "Enter matrix data in this format\n example 2x2 ==> [val1 val2], [val3 val4]\n";
 //                 data2.clear();
 //                 // Clear the cin 
@@ -164,6 +164,7 @@
 //                 is2 << data2;
 //                 is2 >> mat2;
 //                 cout << "The mat u entered is:\n" << mat2 << '\n';
+//                 cout << "The answer:\n";
 //                 fflush(stdout);
 //             }
 //             // Do the operation

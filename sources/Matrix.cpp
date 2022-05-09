@@ -9,7 +9,7 @@ namespace zich{
     Matrix Matrix:: operator+(const Matrix &mat) const{
         if (this->mat_size != mat.mat_size || this->columns != mat.columns || this->rows != mat.rows){
             throw std::runtime_error("Both matrixs should be the same size");
-        }        
+        }
         std::vector<double> new_data;
         new_data.resize((unsigned long)mat.mat_size);
         // Fill the new vector with the calculation results
